@@ -81,7 +81,19 @@ function createButton() {
     return extensionButton;
 }
 
-async function grabFrame(chat) {
+/**
+ * Generation interceptor for screen sharing.
+ * @param {object[]} chat Chat messages
+ * @param {number} _contextSize Context size (unused)
+ * @param {function} _abort Abort function (unused)
+ * @param {string} type Type of generation
+ */
+async function grabFrame(chat, _contextSize, _abort, type) {
+    if (type === 'quiet') {
+        console.debug('grabFrame: quiet mode');
+        return;
+    }
+
     if (!Array.isArray(chat) || chat.length === 0) {
         console.debug('grabFrame: chat is empty');
         return;
@@ -208,6 +220,6 @@ async function launchScreenShare() {
         console.error('Failed to start screen sharing.', error);
         toastr.error('Failed to start screen sharing. Check debug console for more details.');
     }
-};
+}
 
 window['extension_ScreenShare_interceptor'] = grabFrame;
